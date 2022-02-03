@@ -8,17 +8,21 @@ const validateEmail = email => {
 
 const validateName = name => {
     let re = /^[a-zA-Z]+ [a-zA-Z]+$/;
-    return !re.test(name);
+    return re.test(name);
+}
+
+const validatePassword = password => {
+    let re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+    return re.test(password);
 }
 
 const userSchema = mongoose.Schema({
     fullName: {
         type: String,
-        trim: true,
-        required: true,
+        required: 'Name is required',
         minlength: 5,
         validate: [validateName , 'Please enter a valid name'], 
-        match: [/^[A-Za-z]+$/, 'Please enter a valid name']
+        match: [/^[a-zA-Z]+ [a-zA-Z]+$/, 'Please enter a valid name']
     },
     email: {
         type: String,
@@ -30,10 +34,15 @@ const userSchema = mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     password: {
-        type: String
+        type: String,
+        required: 'Password is required',
+        minlength: 8,
+        validate: [validatePassword, 'Please enter proper password'],
+        match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/, 'Please enter proper password']
     },
     mobile: {
         type: Number,
+        required: 'Mobile Number is Required',
         minlenght: 10,
         maxlength: 13
     },
